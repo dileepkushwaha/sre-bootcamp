@@ -3,8 +3,11 @@ name: CI Pipeline
 on:
   push:
     paths:
-      - 'code/**'
-  workflow_dispatch:
+      - '**/*.go' # Trigger on any Go files in the repository
+      - 'Dockerfile' # Trigger on changes to the Dockerfile
+      - '.github/workflows/**' # Trigger on changes to the workflow files
+      - 'Makefile' # Trigger on changes to the Makefile
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
   build-and-deploy:
