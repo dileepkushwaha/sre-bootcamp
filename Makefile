@@ -39,9 +39,9 @@ healthcheck:
 	@curl -s http://localhost:8080/healthcheck
 
 # Docker variables
-IMAGE_NAME = sre
+IMAGE_NAME = sre-bootcamp
 IMAGE_TAG = 1.0.0
-CONTAINER_NAME = sre
+CONTAINER_NAME = sre-bootcamp
 DB_CONTAINER_NAME = my_database
 
 # Start the DB container
@@ -71,9 +71,9 @@ stop-all:
 	docker-compose down
 
 # Docker variables
-IMAGE_NAME = sre
+IMAGE_NAME = sre-bootcamp
 IMAGE_TAG = 1.0.0
-CONTAINER_NAME = sre
+CONTAINER_NAME = sre-bootcamp
 DB_CONTAINER_NAME = my_database
 
 # Linting
