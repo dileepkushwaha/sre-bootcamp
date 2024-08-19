@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -o /sre ./cmd
+RUN CGO_ENABLED=0 GOOS=linux go build -o /sre-bootcamp ./cmd
 
 # Stage 2: Create a small image to run the application
 FROM alpine:latest
@@ -26,7 +26,13 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage
-COPY --from=builder /sre .
+COPY --from=builder /sre-bootcamp .
+
+# Verify the binary is present
+RUN ls -la /root/
+
+# Copy the .env file into the container
+COPY .env /root/.env
 
 # Expose port 8080 to the outside world
 EXPOSE 8080
