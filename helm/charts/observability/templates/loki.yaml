@@ -28,8 +28,11 @@ metadata:
   name: loki
   namespace: {{ .Values.namespace }}
 spec:
+  type: {{ .Values.loki.service.type }}  # Use the service type from values.yaml
   selector:
     app: loki
   ports:
     - port: 3100
+      targetPort: 3100
+      nodePort: {{ .Values.loki.service.nodePort }}  # Use the NodePort from values.yaml
 {{- end }}

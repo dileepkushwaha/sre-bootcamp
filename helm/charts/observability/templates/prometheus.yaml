@@ -28,8 +28,11 @@ metadata:
   name: prometheus
   namespace: {{ .Values.namespace }}
 spec:
+  type: {{ .Values.prometheus.service.type }}  # Use the service type from values.yaml
   selector:
     app: prometheus
   ports:
     - port: 9090
+      targetPort: 9090
+      nodePort: {{ .Values.prometheus.service.nodePort }}  # Use the NodePort from values.yaml
 {{- end }}
