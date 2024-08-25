@@ -35,6 +35,15 @@ postgresql:
     username: user
     password: password
     database: studentdb
+  volumePermissions:
+    enabled: true
+    image:
+      registry: docker.io
+      repository: bitnami/bitnami-shell
+      tag: latest
+      pullPolicy: IfNotPresent
+    securityContext:
+      runAsUser: 0
 
 serviceAccount:
   create: true
