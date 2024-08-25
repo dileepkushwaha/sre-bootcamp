@@ -1,0 +1,49 @@
+namespace: observability
+
+prometheus:
+  enabled: true
+  nodeSelector:
+    kubernetes.io/hostname: dependent_services
+
+loki:
+  enabled: true
+  nodeSelector:
+    kubernetes.io/hostname: dependent_services
+
+grafana:
+  enabled: true
+  nodeSelector:
+    kubernetes.io/hostname: dependent_services
+
+promtail:
+  enabled: true
+  config:
+    snippets:
+      extraRelabelConfigs:
+        - action: keep
+          regex: app
+          source_labels:
+            - __meta_kubernetes_pod_label_app
+
+postgresExporter:
+  enabled: true
+  env:
+    - name: DATA_SOURCE_NAME
+      value: "postgresql://user:password@postgresql:5432/studentdb?sslmode=disable"
+
+blackboxExporter:
+  enabled: true
+  config:
+    modules:
+      http_2xx:
+        prober: http
+        timeout: 5s
+        http:
+          valid_status_codes: []
+          method: GET
+
+kubeStateMetrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true

@@ -1,0 +1,35 @@
+{{- if .Values.postgresExporter.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-exporter
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-exporter
+  template:
+    metadata:
+      labels:
+        app: postgres-exporter
+    spec:
+      containers:
+      - name: postgres-exporter
+        image: wrouesnel/postgres_exporter:v0.8.0
+        ports:
+        - containerPort: 9187
+        env:
+        {{- toYaml .Values.postgresExporter.env | nindent 8 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-exporter
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: postgres-exporter
+  ports:
+    - port: 9187
+{{- end }}
