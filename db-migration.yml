@@ -1,0 +1,20 @@
+# db-migrations.yaml
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrations
+  namespace: student-api
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+      - name: db-migration
+        image: ghcr.io/dileepkushwaha/sre-bootcamp:1.0.11
+        command: ["/bin/sh", "-c", "/root/run-migrations.sh"]
+        envFrom:
+        - secretRef:
+            name: db-secrets
+      restartPolicy: OnFailure

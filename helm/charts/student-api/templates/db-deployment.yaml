@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: student-db
+  template:
+    metadata:
+      labels:
+        app: student-db
+    spec:
+      containers:
+      - name: db
+        image: {{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}
+        envFrom:
+        - secretRef:
+            name: db-secrets
+        env:
+        - name: POSTGRES_DB
+          value: {{ .Values.database.dbName }}
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: db-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: db-data
+        emptyDir: {}

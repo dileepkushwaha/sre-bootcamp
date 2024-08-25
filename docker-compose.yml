@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_DB: studentdb
     ports:
       - "5432:5432"
     volumes:
@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile
     container_name: sre-bootcamp-api
     environment:
-      DB_URL: postgres://user:password@db:5432/mydb?sslmode=disable
+      DB_URL: postgres://user:password@db:5432/studentdb?sslmode=disable
     depends_on:
       - db
     networks:
@@ -33,7 +33,7 @@ services:
     image: ghcr.io/dileepkushwaha/sre-bootcamp:1.0.0
     container_name: sre-bootcamp-replica
     environment:
-      DB_URL: postgres://user:password@db:5432/mydb?sslmode=disable
+      DB_URL: postgres://user:password@db:5432/studentdb?sslmode=disable
     depends_on:
       - db
     networks:

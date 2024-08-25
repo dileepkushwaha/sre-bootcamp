@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: student-api
+  ports:
+    - protocol: TCP
+      port: {{ .Values.api.service.port }}  # This uses the port value from values.yaml
+      targetPort: {{ .Values.api.service.targetPort }}
+      nodePort: {{ .Values.api.service.nodePort }}
+  type: NodePort

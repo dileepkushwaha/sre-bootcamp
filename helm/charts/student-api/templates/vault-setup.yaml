@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-setup
+  namespace: {{ .Values.namespace }}
+spec:
+  template:
+    spec:
+      serviceAccountName: vault-auth
+      containers:
+      - name: vault-setup
+        image: hashicorp/vault:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          export VAULT_ADDR=http://vault.vault.svc.cluster.local:8200
+          vault login ${VAULT_ROOT_TOKEN}
+          vault auth enable kubernetes || true
+          vault write auth/kubernetes/config \
+            kubernetes_host="https://$KUBERNETES_PORT_443_TCP_ADDR:443" \
+            token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+            kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+            issuer="https://kubernetes.default.svc.cluster.local"
+          vault policy write student-api - <<EOF
+          path "secret/data/student-api/*" {
+            capabilities = ["read"]
+          }
+          EOF
+          vault write auth/kubernetes/role/student-api \
+            bound_service_account_names=vault-auth \
+            bound_service_account_namespaces={{ .Values.namespace }} \
+            policies=student-api \
+            ttl=1h
+          vault kv put secret/student-api/database \
+            url="postgres://{{ .Values.database.user }}:{{ .Values.database.password }}@db-service:5432/{{ .Values.database.dbName }}?sslmode=disable" \
+            username="{{ .Values.database.user }}" \
+            password="{{ .Values.database.password }}"
+        env:
+        - name: VAULT_ROOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: vault-root-token
+              key: token
+      restartPolicy: OnFailure

@@ -1,0 +1,27 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: student-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: student-api
+      component: api
+  template:
+    metadata:
+      labels:
+        app: student-api
+        component: api
+    spec:
+      serviceAccountName: vault-auth
+      containers:
+      - name: api
+        image: ghcr.io/dileepkushwaha/sre-bootcamp:1.0.11
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - secretRef:
+            name: student-api-db-secrets

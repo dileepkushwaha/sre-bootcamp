@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrations
+  namespace: {{ .Values.namespace }}
+spec:
+  template:
+    spec:
+      containers:
+      - name: db-migration
+        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}
+        command: ["/bin/sh", "-c", "/root/run-migrations.sh"]
+        envFrom:
+        - secretRef:
+            name: db-secrets
+      restartPolicy: OnFailure

@@ -1,0 +1,51 @@
+namespace: student-api
+
+api:
+  image:
+    repository: ghcr.io/dileepkushwaha/sre-bootcamp
+    tag: 1.0.11
+  replicas: 1
+  service:
+    port: 80
+    targetPort: 8080
+    nodePort: 30080
+
+database:
+  url: "postgres://user:password@db-service:5432/studentdb"
+  image:
+    repository: postgres
+    tag: latest
+  user: user
+  password: password
+  dbName: studentdb
+
+vault:
+  enabled: true
+  server:
+    dev:
+      enabled: true
+  injector:
+    enabled: true
+  setup:
+    enabled: true
+
+postgresql:
+  enabled: true
+  auth:
+    username: user
+    password: password
+    database: studentdb
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  tls: []
+  hosts: []
+autoscaling:
+  enabled: false

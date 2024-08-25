@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.api.replicas }}
+  selector:
+    matchLabels:
+      app: student-api
+      component: api
+  template:
+    metadata:
+      labels:
+        app: student-api
+        component: api
+    spec:
+      serviceAccountName: vault-auth
+      containers:
+      - name: api
+        image: {{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}
+        #ports:
+        #- containerPort: 8080
+        env:
+        - name: DB_URL
+          valueFrom:
+            secretKeyRef:
+              name: student-api-db-secrets
+              key: DB_URL
+        #env:
+        #- name: DB_URL
+        #  value: "postgres://user:password@db-service:5432/studentdb?sslmode=disable"
