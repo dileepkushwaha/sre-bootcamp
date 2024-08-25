@@ -91,3 +91,12 @@ This repository contains Helm charts for deploying the Student API and its depen
 1. Clone this repository:
 git clone https://github.com/dileepkushwaha/student-api-helm.git
 cd student-api-helm
+
+
+## Setting up ArgoCD
+
+1. Install ArgoCD in your Kubernetes cluster:
+
+   ```bash
+   kubectl create namespace argocd
+   kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml

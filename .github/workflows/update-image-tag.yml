@@ -1,0 +1,27 @@
+name: Update Image Tag
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+
+jobs:
+  update-image-tag:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Update image tag
+        run: |
+          NEW_TAG=$(git rev-parse --short HEAD)
+          sed -i "s/tag: .*/tag: $NEW_TAG/" helm/charts/student-api/values.yaml
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "dileepkushwaha@hotmail.com"
+          git config --local user.name "dileepkushwaha"
+          git add helm/charts/student-api/values.yaml
+          git commit -m "Update image tag to $NEW_TAG"
+          git push
