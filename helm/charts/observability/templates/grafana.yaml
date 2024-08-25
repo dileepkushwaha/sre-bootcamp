@@ -19,8 +19,16 @@ spec:
       containers:
       - name: grafana
         image: grafana/grafana:8.3.0
+        volumeMounts:
+        - name: grafana-datasources  # This should match the name in the volumes section
+          mountPath: /etc/grafana/provisioning/datasources
+          readOnly: true
         ports:
         - containerPort: 3000
+      volumes:
+      - name: grafana-datasources  # Ensure this name matches the volumeMounts name
+        configMap:
+          name: grafana-datasources  # This should match the ConfigMap name
 ---
 apiVersion: v1
 kind: Service

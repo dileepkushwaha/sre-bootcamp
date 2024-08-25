@@ -1,0 +1,22 @@
+{{- if .Values.grafana.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: {{ .Values.namespace }}
+labels:
+  app: grafana
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+    {{- range .Values.grafana.datasources.datasources }}
+    - name: {{ .name }}
+      type: {{ .type }}
+      url: {{ .url }}
+      access: {{ .access }}
+      {{- if .isDefault }}
+      isDefault: {{ .isDefault }}
+      {{- end }}
+    {{- end }}
+{{- end }}

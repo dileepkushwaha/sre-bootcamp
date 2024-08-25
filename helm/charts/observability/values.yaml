@@ -23,12 +23,23 @@ grafana:
     nodePort: 30300
   nodeSelector:
     type: dependent_services
+  datasources:
+    datasources:  # Removed the `yaml` level and placed the structure directly under `datasources`
+      - name: Prometheus
+        type: prometheus
+        url: http://localhost:30500
+        access: proxy
+        isDefault: true
+      - name: Loki
+        type: loki
+        url: http://localhost:30400
+        access: proxy
 
 promtail:
   config:
     serverPort: 3101
     clients:
-      - url: http://loki:3100/loki/api/v1/push
+      - url: http://localhost:30400/loki/api/v1/push
     scrapeConfigs:
       - job_name: kubernetes-pods
         kubernetes_sd_configs:
