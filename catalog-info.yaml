@@ -6,4 +6,5 @@ metadata:
     github.com/project-slug: dileepkushwaha/sre-bootcamp
 spec:
   type: other
+  owner: guests
   lifecycle: unknown
